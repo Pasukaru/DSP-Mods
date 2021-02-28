@@ -62,11 +62,11 @@
         <Compile Include="Util.cs" />
     </ItemGroup>
     <ItemGroup>
-      <Content Include="install.sh" />
-      <Content Include="release.sh" />
       <Content Include="Release\icon.png" />
       <Content Include="Release\manifest.json" />
       <Content Include="Release\README.md" />
+      <Content Include="Scripts\install.sh" />
+      <Content Include="Scripts\release.sh" />
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
     <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

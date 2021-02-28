@@ -1,18 +1,32 @@
 ﻿# AutoStationConfig
 
-This mod automatically configures ILS when they are placed. 
+[![GitHub](https://img.shields.io/github/license/pasukaru/DSP-Mods?style=for-the-badge)](https://github.com/Pasukaru/DSP-Mods/tree/main/AutoStationConfig)
+
+## Features
+
+This mod automatically configures PLS (Planetary Logistics Stations) ILS (Interstellar Logistics Station) when they are placed. 
 Currently, the mod itself is not configurable.
 
 This mod is intended for faster scaling of your production lines in end-game.
 
+PLS will be setup like this:
+- Automatically **add Drones from inventory** (if you don't have enough, it will use all that are available)
+- **Max Charging Power**: Max
+- **Transport Range of Drones**: Max (180°)
+- **Min Load of Drones**: 100%
+
 ILS will be setup like this:
+- Automatically **add Drones & Vessels from inventory** (if you don't have enough, it will use all that are available)
+- **Max Charging Power**: Max
+- **Transport Range of Drones & Vessels**: Max (180° (Drones), Infinite (Vessels))
+- **Distance to enable warp**: Min (0.5 AU)
+- **Min Load of Drones & Vessels** 100%
+- **Last item slot**: `Space Warper | 100 | Local Demand | Remote Storage`
 
-Last item slot: <br>
-Space Warper | 100 | Local Demand | Remote Storage
+## Changelog
 
-Max Charging Power set to max. <br>
-Transport Range of Drones & Vessels set to max. <br>
-Distance to enable warp: 0.5 AU. <br>
-Min Load of Drones & Vessels: 100% <br>
+### 1.1.0
+Added settings for PLS
 
-It will also automatically insert max drones and vessels from your inventory into the station.
+### 1.0.0
+Initial Release

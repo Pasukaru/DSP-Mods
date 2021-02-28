@@ -1,7 +1,9 @@
 {
   "name": "AutoStationConfig",
-  "version_number": "1.0.0",
-  "website_url": "https://github.com/Pasukaru/DSP-Mods",
+  "version_number": "1.1.0",
+  "website_url": "https://github.com/Pasukaru/DSP-Mods/tree/main/AutoStationConfig",
   "description": "Automatically configures ILS when placed.",
-  "dependencies": []
+  "dependencies": [
+    "xiaoye97-BepInEx-5.4.5"
+  ]
 }

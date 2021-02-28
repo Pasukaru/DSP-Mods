@@ -4,6 +4,9 @@ set -euo pipefail
 
 cd "$(dirname "$0")"
 
+cd ..
+
+../get-libs.sh
 ../build.sh
 
 FILE_NAME="AutoStationConfig.dll"
