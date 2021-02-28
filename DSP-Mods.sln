@@ -1,0 +1,15 @@
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoStationConfig", "AutoStationConfig\AutoStationConfig.csproj", "{1F1561C1-0F80-46E2-9543-0D9220DD3EDE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1F1561C1-0F80-46E2-9543-0D9220DD3EDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F1561C1-0F80-46E2-9543-0D9220DD3EDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F1561C1-0F80-46E2-9543-0D9220DD3EDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F1561C1-0F80-46E2-9543-0D9220DD3EDE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
