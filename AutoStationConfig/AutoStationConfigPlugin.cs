@@ -26,6 +26,7 @@ namespace Pasukaru.DSP.AutoStationConfig
         public static ConfigEntry<bool> MustEquipWarp;
         public static ConfigEntry<int> DroneLoad;
         public static ConfigEntry<int> VesselLoad;
+        public static ConfigEntry<bool> WarperAutoDemand;
 
         void InitConfig()
         {
@@ -38,6 +39,7 @@ namespace Pasukaru.DSP.AutoStationConfig
             MustEquipWarp = Config.Bind("General.Toggles", "MustEquipWarp", true, "Toggle to only depart if Warp is available.");
             DroneLoad = Config.Bind("General", "DroneLoad", 100, "Planetary Drone load (in percentage)");
             VesselLoad = Config.Bind("General", "VesselLoad", 100, "Interplanetary Vessel load (in percentage)");
+            WarperAutoDemand = Config.Bind("General.Toggles", "WarperAutoDemand", true, "Toggle if the warpers are automatically set to a demand mode.");
         }
 
 

@@ -125,12 +125,15 @@ namespace Pasukaru.DSP.AutoStationConfig
             PlanetTransport planetTransport
         )
         {
+
+            var storageType = AutoStationConfigPlugin.WarperAutoDemand.Value ? ELogisticStorage.Demand : ELogisticStorage.None;
+
             planetTransport.SetStationStorage(
                 component.id,
                 component.storage.Length - 1,
                 1210, // Item ID for Warpers
                 100,
-                ELogisticStorage.Demand,
+                storageType,
                 ELogisticStorage.None, GameMain.mainPlayer.package
             );
             planetTransport.gameData.galacticTransport.RefreshTraffic(component.gid);
