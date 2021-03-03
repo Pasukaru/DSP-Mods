@@ -105,9 +105,8 @@ namespace Pasukaru.DSP.AutoStationConfig
 
         public static void AddVesselsFromInventory(this StationComponent component, PrefabDesc prefabDesc)
         {
-            var percentage = component.isStellar
-                ? Config.ILS.DroneInsertPercentage.Value
-                : Config.PLS.DroneInsertPercentage.Value;
+            if (!component.isStellar) return;
+            var percentage = Config.ILS.VesselInsertPercentage.Value;
             var maxToTake = Convert.ToInt32(Math.Floor(prefabDesc.stationMaxShipCount * percentage));
             var numAvailable = GameMain.mainPlayer.package.TakeItem(5002, maxToTake);
             component.idleShipCount = numAvailable;

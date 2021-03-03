@@ -79,7 +79,7 @@ namespace Pasukaru.DSP.AutoStationConfig
 
             PLS.DroneInsertPercentage = config.Bind(PLS_SECTION, "Drone Insert Percentage", 1d,
                 new ConfigDescription(
-                    "Amount of drones to insert. For vanilla ILS, 0.05 = 5% = 50/100*0.5 = 2.5, rounded down to 2.",
+                    "Amount of drones to insert. For vanilla PLS, 0.05 = 5% = 50/100*5 = 2.5, rounded down to 2.",
                     new AcceptableValueRange<double>(0, 1),
                     new { }
                 )
@@ -115,7 +115,7 @@ namespace Pasukaru.DSP.AutoStationConfig
 
             ILS.DroneInsertPercentage = config.Bind(ILS_SECTION, "Drone Insert Percentage", 1d,
                 new ConfigDescription(
-                    "Amount of drones to insert. For vanilla ILS, 0.05 = 5% = 50/100*0.5 = 2.5, rounded down to 2.",
+                    "Amount of drones to insert. For vanilla ILS, 0.05 = 5% = 50/100*5 = 2.5, rounded down to 2.",
                     new AcceptableValueRange<double>(0, 1),
                     new { }
                 )

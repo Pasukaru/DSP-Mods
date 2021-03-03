@@ -25,6 +25,11 @@ By default, ILS will be setup like this (all of this can be changed via config):
 
 ## Changelog
 
+### 1.2.1
+Fixed Vessel insertion using configured drone percentage.
+
+Thanks to [Veretragna](https://github.com/Veretragna) for finding and reporting it!
+
 ### 1.2.0
 Added configurable mod settings.
 
