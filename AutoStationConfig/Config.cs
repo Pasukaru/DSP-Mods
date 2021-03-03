@@ -171,7 +171,7 @@ namespace Pasukaru.DSP.AutoStationConfig
                 "Toggle to retrieve from Orbital collectors.");
             
             ILS.MustEquipWarp = config.Bind(ILS_SECTION, "Must Equip Warpers", true,
-                "Toggle to must equip warpers.");
+                "Toggle for must equip warpers.");
         }
     }
 }
