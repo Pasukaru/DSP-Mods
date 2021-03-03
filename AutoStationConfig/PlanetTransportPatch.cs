@@ -98,7 +98,7 @@ namespace Pasukaru.DSP.AutoStationConfig
                 ? Config.ILS.DroneInsertPercentage.Value
                 : Config.PLS.DroneInsertPercentage.Value;
 
-            var maxToTake = (int)Math.Round(prefabDesc.stationMaxDroneCount * percentage);
+            var maxToTake = Convert.ToInt32(Math.Floor(prefabDesc.stationMaxDroneCount * percentage));
             var numAvailable = GameMain.mainPlayer.package.TakeItem(5001, maxToTake);
             component.idleDroneCount = numAvailable;
         }
@@ -108,7 +108,7 @@ namespace Pasukaru.DSP.AutoStationConfig
             var percentage = component.isStellar
                 ? Config.ILS.DroneInsertPercentage.Value
                 : Config.PLS.DroneInsertPercentage.Value;
-            var maxToTake = (int)Math.Round(prefabDesc.stationMaxShipCount * percentage);
+            var maxToTake = Convert.ToInt32(Math.Floor(prefabDesc.stationMaxShipCount * percentage));
             var numAvailable = GameMain.mainPlayer.package.TakeItem(5002, maxToTake);
             component.idleShipCount = numAvailable;
         }
