@@ -100,7 +100,7 @@ namespace Pasukaru.DSP.AutoStationConfig
             ILS.DroneTransportRange = config.Bind(ILS_SECTION, "Drone Transport Range", 180,
                 new ConfigDescription(
                     "Planetary Drone range in degrees (°).",
-                    new AcceptableValueRange<int>(10, 180),
+                    new AcceptableValueRange<int>(20, 180),
                     new { }
                 )
             );
