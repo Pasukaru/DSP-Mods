@@ -76,13 +76,8 @@ namespace Pasukaru.DSP.AutoStationConfig
 
         public static void SetMinWarpDistance(this StationComponent component)
         {
+            // Minimum 0.5 AUs, Maximum 60 AUs.
             var minWarpDistance = minMaxDeterminator(0.5, 60, AutoStationConfigPlugin.MinWarpDistance.Value);
-
-            AutoStationConfigPlugin.Logger.LogInfo("MWD: " + AutoStationConfigPlugin.MinWarpDistance.Value);
-            AutoStationConfigPlugin.Logger.LogInfo("MMD - MWD: " + minWarpDistance);
-
-            // Safety checks.
-            // Min is 0.5 and Max is 60 (AUs)
             component.warpEnableDist = Util.AU(minWarpDistance);
         }
 
@@ -143,6 +138,9 @@ namespace Pasukaru.DSP.AutoStationConfig
             planetTransport.gameData.galacticTransport.RefreshTraffic(component.gid);
         }
 
+        /**
+         * Utility method to safety check the ranges and of the configuration field.
+         */
         private static double minMaxDeterminator(
             double min, double max, double testValue)
         {
