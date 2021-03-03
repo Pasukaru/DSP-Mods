@@ -15,20 +15,20 @@ namespace Pasukaru.DSP.AutoStationConfig
         {
             var component = __result;
             if (component.isCollector) return;
-            
+
             var planetTransport = __instance;
             var itemProto = LDB.items.Select(planetTransport.factory.entityPool[component.entityId].protoId);
             var prefabDesc = itemProto.prefabDesc;
 
-            component.deliveryDrones = 100; // Min Load of Drones (in percent)
-            component.tripRangeDrones = -1; // Drone range. -1 = Max (180°)
-            component.SetMaxPower(planetTransport, prefabDesc);
+            component.SetChargingPower(planetTransport, prefabDesc);
+            component.SetTransportRanges();
+            component.SetTransportLoads();
             component.AddDronesFromInventory(prefabDesc);
 
+            // Extra configuration if ILS.
             if (!component.isStellar) return;
-            component.deliveryShips = 100; // Min Load of Vessels (in percent)
-            component.tripRangeShips = Util.LY(10000);
-            component.warpEnableDist = Util.AU(0.5);
+            component.SetToggles();
+            component.SetMinWarpDistance();
             component.AddVesselsFromInventory(prefabDesc);
             component.AddWarperRequestToLastSlot(planetTransport);
         }
@@ -36,25 +36,80 @@ namespace Pasukaru.DSP.AutoStationConfig
 
     public static class Extensions
     {
-        public static void SetMaxPower(
+        public static void SetChargingPower(
             this StationComponent component,
             PlanetTransport planetTransport,
             PrefabDesc prefabDesc
         )
         {
-            var maxEnergyPerTick = prefabDesc.workEnergyPerTick * 5L;
-            planetTransport.factory.powerSystem.consumerPool[component.pcId].workEnergyPerTick = maxEnergyPerTick;
+            if (component.isCollector) return;
+            
+            var maxEnergy = prefabDesc.workEnergyPerTick * 5;
+            var percent = component.isStellar
+                ? Config.ILS.ChargingPowerInPercent.Value
+                : Config.PLS.ChargingPowerInPercent.Value;
+            
+            var workPerTick = maxEnergy * percent / 100;
+            planetTransport.factory.powerSystem.consumerPool[component.pcId].workEnergyPerTick = workPerTick;
+        }
+
+        public static void SetTransportRanges(this StationComponent component)
+        {
+            component.tripRangeDrones = component.isStellar
+                ? Util.ConvertDegreesToDroneRange(Config.ILS.DroneTransportRange.Value)
+                : Util.ConvertDegreesToDroneRange(Config.PLS.DroneTransportRange.Value);
+
+            if (!component.isStellar) return;
+            component.tripRangeShips = Util.LY(Config.ILS.VesselTransportRange.Value);
+        }
+
+        public static void SetMinWarpDistance(this StationComponent component)
+        {
+            if (!component.isStellar) return;
+            component.warpEnableDist = Util.AU(Config.ILS.MinWarpDistance.Value);
+        }
+
+        public static void SetTransportLoads(
+            this StationComponent component
+        )
+        {
+            if (component.isStellar)
+            {
+                component.deliveryDrones = Config.ILS.MinDroneLoad.Value;
+                component.deliveryShips =  Config.ILS.MinVesselLoad.Value;
+            }
+            else
+            {
+                component.deliveryDrones = Config.PLS.MinDroneLoad.Value;
+            }
+        }
+
+        public static void SetToggles(
+            this StationComponent component
+        )
+        {
+            component.warperNecessary = Config.ILS.MustEquipWarp.Value;
+            component.includeOrbitCollector = Config.ILS.UseOrbitalCollectors.Value;
         }
 
         public static void AddDronesFromInventory(this StationComponent component, PrefabDesc prefabDesc)
         {
-            var numAvailable = GameMain.mainPlayer.package.TakeItem(5001, prefabDesc.stationMaxDroneCount);
+            var percentage = component.isStellar
+                ? Config.ILS.DroneInsertPercentage.Value
+                : Config.PLS.DroneInsertPercentage.Value;
+
+            var maxToTake = Convert.ToInt32(Math.Floor(prefabDesc.stationMaxDroneCount * percentage));
+            var numAvailable = GameMain.mainPlayer.package.TakeItem(5001, maxToTake);
             component.idleDroneCount = numAvailable;
         }
 
         public static void AddVesselsFromInventory(this StationComponent component, PrefabDesc prefabDesc)
         {
-            var numAvailable = GameMain.mainPlayer.package.TakeItem(5002, prefabDesc.stationMaxShipCount);
+            var percentage = component.isStellar
+                ? Config.ILS.DroneInsertPercentage.Value
+                : Config.PLS.DroneInsertPercentage.Value;
+            var maxToTake = Convert.ToInt32(Math.Floor(prefabDesc.stationMaxShipCount * percentage));
+            var numAvailable = GameMain.mainPlayer.package.TakeItem(5002, maxToTake);
             component.idleShipCount = numAvailable;
         }
 
@@ -63,14 +118,19 @@ namespace Pasukaru.DSP.AutoStationConfig
             PlanetTransport planetTransport
         )
         {
+            if (!component.isStellar) return;
+            if (!Config.ILS.WarperInLastItemSlot.Value) return;
+            
             planetTransport.SetStationStorage(
                 component.id,
                 component.storage.Length - 1,
-                1210,
+                1210, // Item ID for Warpers
                 100,
-                ELogisticStorage.Demand,
-                ELogisticStorage.None, GameMain.mainPlayer.package
+                Config.ILS.WarperLocalMode.Value,
+                Config.ILS.WarperRemoteMode.Value,
+                GameMain.mainPlayer.package
             );
+
             planetTransport.gameData.galacticTransport.RefreshTraffic(component.gid);
         }
     }
