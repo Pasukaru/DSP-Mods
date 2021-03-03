@@ -1,12 +1,10 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using BepInEx;
-using BepInEx.Logging;
-using BepInEx.Configuration;
+﻿using BepInEx.Configuration;
 
+// ReSharper disable ConvertToConstant.Local
 namespace Pasukaru.DSP.AutoStationConfig
 {
-    [SuppressMessage("ReSharper", "ConvertToConstant.Local")]
-    public class Config : BaseUnityPlugin
+    
+    public static class Config
     {
         private static readonly string PLS_SECTION = "Planetary Logistics Station";
         private static readonly string ILS_SECTION = "Interstellar Logistics Station";
