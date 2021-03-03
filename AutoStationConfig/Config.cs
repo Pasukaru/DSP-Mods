@@ -72,7 +72,7 @@ namespace Pasukaru.DSP.AutoStationConfig
             PLS.MinDroneLoad = config.Bind(PLS_SECTION, "Min Load of Drones", 100,
                 new ConfigDescription(
                     "Min. Load of Drones in percent.",
-                    new AcceptableValueList<int>(1, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100),
+                    new AcceptableValueRange<int>(1,100),
                     new { }
                 )
             );
@@ -108,7 +108,7 @@ namespace Pasukaru.DSP.AutoStationConfig
             ILS.MinDroneLoad = config.Bind(ILS_SECTION, "Min Load of Drones", 100,
                 new ConfigDescription(
                     "Min. Load of Drones in percent.",
-                    new AcceptableValueList<int>(1, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100),
+                    new AcceptableValueRange<int>(1,100),
                     new { }
                 )
             );
@@ -133,7 +133,7 @@ namespace Pasukaru.DSP.AutoStationConfig
             ILS.MinVesselLoad = config.Bind(ILS_SECTION, "Min Load of Vessels", 100,
                 new ConfigDescription(
                     "Min. Load of Vessels in percent.",
-                    new AcceptableValueList<int>(1, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100),
+                    new AcceptableValueRange<int>(1,100),
                     new { }
                 )
             );
