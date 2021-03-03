@@ -27,6 +27,8 @@ namespace Pasukaru.DSP.AutoStationConfig
         public static ConfigEntry<int> DroneLoad;
         public static ConfigEntry<int> VesselLoad;
         public static ConfigEntry<bool> WarperAutoDemand;
+        public static ConfigEntry<int> DroneInsertCount;
+        public static ConfigEntry<int> VesselInsertCount;
 
         void InitConfig()
         {
@@ -40,6 +42,8 @@ namespace Pasukaru.DSP.AutoStationConfig
             DroneLoad = Config.Bind("General", "DroneLoad", 100, "Planetary Drone load (in percentage)");
             VesselLoad = Config.Bind("General", "VesselLoad", 100, "Interplanetary Vessel load (in percentage)");
             WarperAutoDemand = Config.Bind("General.Toggles", "WarperAutoDemand", true, "Toggle if the warpers are automatically set to a demand mode.");
+            DroneInsertCount = Config.Bind("General", "DroneInsertCount", 50, "Number of drones to automatically add to the logistic station.");
+            VesselInsertCount = Config.Bind("General", "VesselInsertCount", 10, "Number of vessels to automatically add to the logistic station.");
         }
 
 

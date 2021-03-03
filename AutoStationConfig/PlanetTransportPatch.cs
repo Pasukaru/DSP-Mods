@@ -29,6 +29,7 @@ namespace Pasukaru.DSP.AutoStationConfig
             if (component.isStellar)
             {
                 component.SetToggles();
+                component.SetMinWarpDistance();
                 component.AddVesselsFromInventory(prefabDesc);
                 component.AddWarperRequestToLastSlot(planetTransport);
             }
@@ -77,10 +78,14 @@ namespace Pasukaru.DSP.AutoStationConfig
         {
             var minWarpDistance = minMaxDeterminator(0.5, 60, AutoStationConfigPlugin.MinWarpDistance.Value);
 
+            AutoStationConfigPlugin.Logger.LogInfo("MWD: " + AutoStationConfigPlugin.MinWarpDistance.Value);
+            AutoStationConfigPlugin.Logger.LogInfo("MMD - MWD: " + minWarpDistance);
+
             // Safety checks.
             // Min is 0.5 and Max is 60 (AUs)
             component.warpEnableDist = Util.AU(minWarpDistance);
         }
+
         public static void SetTransportLoads(
            this StationComponent component
            )
@@ -97,9 +102,6 @@ namespace Pasukaru.DSP.AutoStationConfig
 
         }
 
-        /**
-         * Set the toggles for orbital collectors and must equip warpers for ILS stations based on config.
-         */
         public static void SetToggles(
             this StationComponent component
             )
@@ -110,13 +112,15 @@ namespace Pasukaru.DSP.AutoStationConfig
 
         public static void AddDronesFromInventory(this StationComponent component, PrefabDesc prefabDesc)
         {
-            var numAvailable = GameMain.mainPlayer.package.TakeItem(5001, prefabDesc.stationMaxDroneCount);
+            var droneAutofillCount = minMaxDeterminator(0, prefabDesc.stationMaxDroneCount, AutoStationConfigPlugin.DroneInsertCount.Value);
+            var numAvailable = GameMain.mainPlayer.package.TakeItem(5001, Convert.ToInt32(droneAutofillCount));
             component.idleDroneCount = numAvailable;
         }
 
         public static void AddVesselsFromInventory(this StationComponent component, PrefabDesc prefabDesc)
         {
-            var numAvailable = GameMain.mainPlayer.package.TakeItem(5002, prefabDesc.stationMaxShipCount);
+            var vesselAutofillCount = minMaxDeterminator(0, prefabDesc.stationMaxShipCount, AutoStationConfigPlugin.VesselInsertCount.Value);
+            var numAvailable = GameMain.mainPlayer.package.TakeItem(5002, Convert.ToInt32(vesselAutofillCount));
             component.idleShipCount = numAvailable;
         }
 
