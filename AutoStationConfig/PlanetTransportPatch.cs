@@ -20,102 +20,96 @@ namespace Pasukaru.DSP.AutoStationConfig
             var itemProto = LDB.items.Select(planetTransport.factory.entityPool[component.entityId].protoId);
             var prefabDesc = itemProto.prefabDesc;
 
-            component.SetMaxPower(planetTransport, prefabDesc);
+            component.SetChargingPower(planetTransport, prefabDesc);
             component.SetTransportRanges();
             component.SetTransportLoads();
             component.AddDronesFromInventory(prefabDesc);
 
             // Extra configuration if ILS.
-            if (component.isStellar)
-            {
-                component.SetToggles();
-                component.SetMinWarpDistance();
-                component.AddVesselsFromInventory(prefabDesc);
-                component.AddWarperRequestToLastSlot(planetTransport);
-            }
+            if (!component.isStellar) return;
+            component.SetToggles();
+            component.SetMinWarpDistance();
+            component.AddVesselsFromInventory(prefabDesc);
+            component.AddWarperRequestToLastSlot(planetTransport);
         }
     }
 
     public static class Extensions
     {
-        public static void SetMaxPower(
+        public static void SetChargingPower(
             this StationComponent component,
             PlanetTransport planetTransport,
             PrefabDesc prefabDesc
         )
         {
-            // Default is 60 MW, max is 300 MW (60 * 5) and min is 30 MW (60 * 0.5).
-            var energyMultiplier = minMaxDeterminator(0.5, 5, AutoStationConfigPlugin.PowerLoad.Value);
-
-            var maxEnergyPerTick = prefabDesc.workEnergyPerTick * energyMultiplier;
-
-            // Required type is long.
-            planetTransport.factory.powerSystem.consumerPool[component.pcId].workEnergyPerTick = Convert.ToInt64(maxEnergyPerTick);
+            if (component.isCollector) return;
+            
+            var maxEnergy = prefabDesc.workEnergyPerTick * 5;
+            var percent = component.isStellar
+                ? Config.ILS.ChargingPowerInPercent.Value
+                : Config.PLS.ChargingPowerInPercent.Value;
+            
+            var workPerTick = maxEnergy * percent / 100;
+            planetTransport.factory.powerSystem.consumerPool[component.pcId].workEnergyPerTick = workPerTick;
         }
 
-        public static void SetTransportRanges(
-            this StationComponent component
-            )
+        public static void SetTransportRanges(this StationComponent component)
         {
-            // Hardcoded to be 180° until conversion below can be determined.
-            var droneTransportRange = -1;
+            component.tripRangeDrones = component.isStellar
+                ? Util.ConvertDegreesToDroneRange(Config.ILS.DroneTransportRange.Value)
+                : Util.ConvertDegreesToDroneRange(Config.PLS.DroneTransportRange.Value);
 
-            // TODO: Need to figure out how to convert a range of 20 and 180 degree value to the game equivalent.
-            // var droneTransportRange = minMaxDeterminator(20, 180, AutoStationConfigPlugin.DroneTransportRange.Value);
-
-            component.tripRangeDrones = droneTransportRange;
-
-            if (component.isStellar)
-            {
-                // Using 61 as a fallback since above 60 the game jumps to infinity.
-                var vesselTransportLoad = minMaxDeterminator(-1, 61, AutoStationConfigPlugin.VesselTransportRange.Value);
-                component.tripRangeShips = vesselTransportLoad == -1 || vesselTransportLoad == 61 ? Util.LY(10000) : Util.LY(vesselTransportLoad);
-            }
-
+            if (!component.isStellar) return;
+            component.tripRangeShips = Util.LY(Config.ILS.VesselTransportRange.Value);
         }
 
         public static void SetMinWarpDistance(this StationComponent component)
         {
-            // Minimum 0.5 AUs, Maximum 60 AUs.
-            var minWarpDistance = minMaxDeterminator(0.5, 60, AutoStationConfigPlugin.MinWarpDistance.Value);
-            component.warpEnableDist = Util.AU(minWarpDistance);
+            if (!component.isStellar) return;
+            component.warpEnableDist = Util.AU(Config.ILS.MinWarpDistance.Value);
         }
 
         public static void SetTransportLoads(
-           this StationComponent component
-           )
+            this StationComponent component
+        )
         {
-            // Minimum 1%, maximum 100%.
-            var droneTransportLoad = minMaxDeterminator(1, 100, AutoStationConfigPlugin.DroneLoad.Value);
-            component.deliveryDrones = Convert.ToInt32(droneTransportLoad);
-
             if (component.isStellar)
             {
-                var vesselTransportLoad = minMaxDeterminator(1, 100, AutoStationConfigPlugin.VesselLoad.Value);
-                component.deliveryShips = Convert.ToInt32(vesselTransportLoad);
+                component.deliveryDrones = Config.ILS.MinDroneLoad.Value;
+                component.deliveryShips =  Config.ILS.MinVesselLoad.Value;
             }
-
+            else
+            {
+                component.deliveryDrones = Config.PLS.MinDroneLoad.Value;
+            }
         }
 
         public static void SetToggles(
             this StationComponent component
-            )
+        )
         {
-            component.warperNecessary = AutoStationConfigPlugin.MustEquipWarp.Value;
-            component.includeOrbitCollector = AutoStationConfigPlugin.UseOrbitalCollectors.Value;
+            component.warperNecessary = Config.ILS.MustEquipWarp.Value;
+            component.includeOrbitCollector = Config.ILS.UseOrbitalCollectors.Value;
         }
 
         public static void AddDronesFromInventory(this StationComponent component, PrefabDesc prefabDesc)
         {
-            var droneAutofillCount = minMaxDeterminator(0, prefabDesc.stationMaxDroneCount, AutoStationConfigPlugin.DroneInsertCount.Value);
-            var numAvailable = GameMain.mainPlayer.package.TakeItem(5001, Convert.ToInt32(droneAutofillCount));
+            var percentage = component.isStellar
+                ? Config.ILS.DroneInsertPercentage.Value
+                : Config.PLS.DroneInsertPercentage.Value;
+
+            var maxToTake = (int)Math.Round(prefabDesc.stationMaxDroneCount * percentage);
+            var numAvailable = GameMain.mainPlayer.package.TakeItem(5001, maxToTake);
             component.idleDroneCount = numAvailable;
         }
 
         public static void AddVesselsFromInventory(this StationComponent component, PrefabDesc prefabDesc)
         {
-            var vesselAutofillCount = minMaxDeterminator(0, prefabDesc.stationMaxShipCount, AutoStationConfigPlugin.VesselInsertCount.Value);
-            var numAvailable = GameMain.mainPlayer.package.TakeItem(5002, Convert.ToInt32(vesselAutofillCount));
+            var percentage = component.isStellar
+                ? Config.ILS.DroneInsertPercentage.Value
+                : Config.PLS.DroneInsertPercentage.Value;
+            var maxToTake = (int)Math.Round(prefabDesc.stationMaxShipCount * percentage);
+            var numAvailable = GameMain.mainPlayer.package.TakeItem(5002, maxToTake);
             component.idleShipCount = numAvailable;
         }
 
@@ -124,38 +118,20 @@ namespace Pasukaru.DSP.AutoStationConfig
             PlanetTransport planetTransport
         )
         {
-
-            var storageType = AutoStationConfigPlugin.WarperAutoDemand.Value ? ELogisticStorage.Demand : ELogisticStorage.None;
-
+            if (!component.isStellar) return;
+            if (!Config.ILS.WarperInLastItemSlot.Value) return;
+            
             planetTransport.SetStationStorage(
                 component.id,
                 component.storage.Length - 1,
                 1210, // Item ID for Warpers
                 100,
-                storageType,
-                ELogisticStorage.None, GameMain.mainPlayer.package
+                Config.ILS.WarperLocalMode.Value,
+                Config.ILS.WarperRemoteMode.Value,
+                GameMain.mainPlayer.package
             );
+
             planetTransport.gameData.galacticTransport.RefreshTraffic(component.gid);
-        }
-
-        /**
-         * Utility method to safety check the ranges and of the configuration field.
-         */
-        private static double minMaxDeterminator(
-            double min, double max, double testValue)
-        {
-
-            if (testValue < min)
-            {
-                return min;
-            }
-
-            else if (testValue > max)
-            {
-                return max;
-            }
-
-            return testValue;
         }
     }
 }
