@@ -1,0 +1,9 @@
+{
+  "name": "FixStationConfig",
+  "version_number": "1.0.0",
+  "website_url": "https://github.com/Pasukaru/DSP-Mods/tree/main/FixStationPower",
+  "description": "Fixes station power that got broken with latest DSP version. Fix will execute after loading a save.",
+  "dependencies": [
+    "xiaoye97-BepInEx-5.4.5"
+  ]
+}

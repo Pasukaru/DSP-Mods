@@ -22,4 +22,5 @@
 	<s:String x:Key="/Default/Environment/AssemblyExplorer/XmlDocument/@EntryValue">&lt;AssemblyExplorer&gt;&#xD;
   &lt;Assembly Path="C:\Users\Pasukaru\Documents\GitHub\DSP-Mods\libs\0Harmony.dll" /&gt;&#xD;
   &lt;Assembly Path="C:\Users\Pasukaru\Documents\GitHub\DSP-Mods\BuildDeps\0Harmony.dll" /&gt;&#xD;
+  &lt;Assembly Path="C:\Users\Pasukaru\Documents\GitHub\DSP-Mods\BuildDeps\Assembly-CSharp.dll" /&gt;&#xD;
 &lt;/AssemblyExplorer&gt;</s:String></wpf:ResourceDictionary>
