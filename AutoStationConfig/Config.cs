@@ -6,8 +6,15 @@ namespace Pasukaru.DSP.AutoStationConfig
     
     public static class Config
     {
+        private static readonly string GENERAL_SECTION = "General";
         private static readonly string PLS_SECTION = "Planetary Logistics Station";
         private static readonly string ILS_SECTION = "Interstellar Logistics Station";
+
+        public static class General
+        {
+            public static ConfigEntry<bool> NotifyWhenDroneOrVesselMissing;
+            public static ConfigEntry<bool> PlaySoundWhenDroneOrVesselMissing;
+        }
 
         public static class PLS
         {
@@ -42,6 +49,17 @@ namespace Pasukaru.DSP.AutoStationConfig
 
         internal static void Init(ConfigFile config)
         {
+            ////////////////////
+            // General Config //
+            ////////////////////
+            General.NotifyWhenDroneOrVesselMissing =
+                config.Bind(GENERAL_SECTION, "Notify when Drone or Vessel missing", true,
+                    "Sends a notification when there are not enough drones or vessel in your inventory to auto fill");
+            
+            General.PlaySoundWhenDroneOrVesselMissing =
+                config.Bind(GENERAL_SECTION, "Play sound when Drone or Vessel missing", true,
+                    "Plays a sound along to the drone/vessel notification. Only works when the notification is turned on.");
+            
             ////////////////
             // PLS Config //
             ////////////////

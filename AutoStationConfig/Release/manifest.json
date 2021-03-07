@@ -1,6 +1,6 @@
 {
   "name": "AutoStationConfig",
-  "version_number": "1.2.1",
+  "version_number": "1.3.0",
   "website_url": "https://github.com/Pasukaru/DSP-Mods/tree/main/AutoStationConfig",
   "description": "Automatically configures ILS when placed.",
   "dependencies": [

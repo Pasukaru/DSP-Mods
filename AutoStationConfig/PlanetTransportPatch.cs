@@ -43,12 +43,12 @@ namespace Pasukaru.DSP.AutoStationConfig
         )
         {
             if (component.isCollector) return;
-            
+
             var maxEnergy = prefabDesc.workEnergyPerTick * 5;
             var percent = component.isStellar
                 ? Config.ILS.ChargingPowerInPercent.Value
                 : Config.PLS.ChargingPowerInPercent.Value;
-            
+
             var workPerTick = maxEnergy * percent / 100;
             planetTransport.factory.powerSystem.consumerPool[component.pcId].workEnergyPerTick = workPerTick;
         }
@@ -76,7 +76,7 @@ namespace Pasukaru.DSP.AutoStationConfig
             if (component.isStellar)
             {
                 component.deliveryDrones = Config.ILS.MinDroneLoad.Value;
-                component.deliveryShips =  Config.ILS.MinVesselLoad.Value;
+                component.deliveryShips = Config.ILS.MinVesselLoad.Value;
             }
             else
             {
@@ -101,6 +101,11 @@ namespace Pasukaru.DSP.AutoStationConfig
             var maxToTake = Convert.ToInt32(Math.Floor(prefabDesc.stationMaxDroneCount * percentage));
             var numAvailable = GameMain.mainPlayer.package.TakeItem(5001, maxToTake);
             component.idleDroneCount = numAvailable;
+            if (Config.General.NotifyWhenDroneOrVesselMissing.Value && numAvailable < maxToTake)
+            {
+                UIRealtimeTip.PopupAhead("Not enough Logistics Drones in inventory!".Translate(),
+                    Config.General.PlaySoundWhenDroneOrVesselMissing.Value);
+            }
         }
 
         public static void AddVesselsFromInventory(this StationComponent component, PrefabDesc prefabDesc)
@@ -110,6 +115,11 @@ namespace Pasukaru.DSP.AutoStationConfig
             var maxToTake = Convert.ToInt32(Math.Floor(prefabDesc.stationMaxShipCount * percentage));
             var numAvailable = GameMain.mainPlayer.package.TakeItem(5002, maxToTake);
             component.idleShipCount = numAvailable;
+            if (Config.General.NotifyWhenDroneOrVesselMissing.Value && numAvailable < maxToTake)
+            {
+                UIRealtimeTip.PopupAhead("Not enough Logistics Vessels in inventory!".Translate(),
+                    Config.General.PlaySoundWhenDroneOrVesselMissing.Value);
+            }
         }
 
         public static void AddWarperRequestToLastSlot(
@@ -119,7 +129,7 @@ namespace Pasukaru.DSP.AutoStationConfig
         {
             if (!component.isStellar) return;
             if (!Config.ILS.WarperInLastItemSlot.Value) return;
-            
+
             planetTransport.SetStationStorage(
                 component.id,
                 component.storage.Length - 1,

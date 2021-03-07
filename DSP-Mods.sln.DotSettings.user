@@ -23,4 +23,5 @@
   &lt;Assembly Path="C:\Users\Pasukaru\Documents\GitHub\DSP-Mods\libs\0Harmony.dll" /&gt;&#xD;
   &lt;Assembly Path="C:\Users\Pasukaru\Documents\GitHub\DSP-Mods\BuildDeps\0Harmony.dll" /&gt;&#xD;
   &lt;Assembly Path="C:\Users\Pasukaru\Documents\GitHub\DSP-Mods\BuildDeps\Assembly-CSharp.dll" /&gt;&#xD;
+  &lt;Assembly Path="C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2\System.dll" /&gt;&#xD;
 &lt;/AssemblyExplorer&gt;</s:String></wpf:ResourceDictionary>
