@@ -137,7 +137,7 @@ namespace Pasukaru.DSP.AutoStationConfig
                 100,
                 Config.ILS.WarperLocalMode.Value,
                 Config.ILS.WarperRemoteMode.Value,
-                GameMain.mainPlayer.package
+                GameMain.mainPlayer
             );
 
             planetTransport.gameData.galacticTransport.RefreshTraffic(component.gid);
