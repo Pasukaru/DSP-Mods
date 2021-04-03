@@ -30,6 +30,11 @@ The available settings will then appear in the r2modman Config Editor (look for 
 
 ## Changelog
 
+### 1.3.1
+Compatibility with latest DSP version (2021-04-03).
+
+Thanks to [fuhaiwei](https://github.com/fuhaiwei) for the PR!
+
 ### 1.3.0
 Send a notification when there are not enough drones / vessels in inventory to auto fill.
 
