@@ -99,7 +99,7 @@ namespace Pasukaru.DSP.AutoStationConfig
                 : Config.PLS.DroneInsertPercentage.Value;
 
             var maxToTake = Convert.ToInt32(Math.Floor(prefabDesc.stationMaxDroneCount * percentage));
-            var numAvailable = GameMain.mainPlayer.package.TakeItem(5001, maxToTake);
+            var numAvailable = GameMain.mainPlayer.package.TakeItem(5001, maxToTake, out _);
             component.idleDroneCount = numAvailable;
             if (Config.General.NotifyWhenDroneOrVesselMissing.Value && numAvailable < maxToTake)
             {
@@ -113,7 +113,7 @@ namespace Pasukaru.DSP.AutoStationConfig
             if (!component.isStellar) return;
             var percentage = Config.ILS.VesselInsertPercentage.Value;
             var maxToTake = Convert.ToInt32(Math.Floor(prefabDesc.stationMaxShipCount * percentage));
-            var numAvailable = GameMain.mainPlayer.package.TakeItem(5002, maxToTake);
+            var numAvailable = GameMain.mainPlayer.package.TakeItem(5002, maxToTake, out _);
             component.idleShipCount = numAvailable;
             if (Config.General.NotifyWhenDroneOrVesselMissing.Value && numAvailable < maxToTake)
             {

@@ -32,17 +32,17 @@
         <WarningLevel>4</WarningLevel>
     </PropertyGroup>
     <ItemGroup>
-        <Reference Include="0Harmony, Version=2.3.0.0, Culture=neutral, PublicKeyToken=null">
-          <HintPath>..\BuildDeps\0Harmony.dll</HintPath>
+        <Reference Include="0Harmony, Version=2.5.5.0, Culture=neutral, PublicKeyToken=null">
+            <HintPath>..\BuildDeps\0Harmony.dll</HintPath>
         </Reference>
         <Reference Include="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-          <HintPath>..\BuildDeps\Assembly-CSharp.dll</HintPath>
+            <HintPath>..\BuildDeps\Assembly-CSharp.dll</HintPath>
         </Reference>
-        <Reference Include="BepInEx, Version=5.4.5.0, Culture=neutral, PublicKeyToken=null">
-          <HintPath>..\BuildDeps\BepInEx.dll</HintPath>
+        <Reference Include="BepInEx, Version=5.4.17.0, Culture=neutral, PublicKeyToken=null">
+            <HintPath>..\BuildDeps\BepInEx.dll</HintPath>
         </Reference>
         <Reference Include="BepInEx.Harmony, Version=2.0.0.0, Culture=neutral, PublicKeyToken=null">
-          <HintPath>..\BuildDeps\BepInEx.Harmony.dll</HintPath>
+            <HintPath>..\BuildDeps\BepInEx.Harmony.dll</HintPath>
         </Reference>
         <Reference Include="System" />
         <Reference Include="System.Core" />

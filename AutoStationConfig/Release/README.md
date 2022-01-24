@@ -30,6 +30,11 @@ The available settings will then appear in the r2modman Config Editor (look for 
 
 ## Changelog
 
+### 1.3.2
+Compatibility with latest DSP version (2022-01-24).
+
+Thanks to [nclow](https://github.com/nclow) for the PR!
+
 ### 1.3.1
 Compatibility with latest DSP version (2021-04-03).
 

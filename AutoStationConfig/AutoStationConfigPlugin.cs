@@ -7,7 +7,7 @@ using HarmonyLib;
 
 namespace Pasukaru.DSP.AutoStationConfig
 {
-    [BepInPlugin("pasukaru.dsp.AutoStationConfig", "AutoStationConfig", "1.3.1")]
+    [BepInPlugin("pasukaru.dsp.AutoStationConfig", "AutoStationConfig", "1.3.2")]
     [BepInProcess("DSPGAME.exe")]
     public class AutoStationConfigPlugin : BaseUnityPlugin
     {
