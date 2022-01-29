@@ -30,6 +30,13 @@ The available settings will then appear in the r2modman Config Editor (look for 
 
 ## Changelog
 
+### 1.3.4
+The mod now automatically checks all ILS after loading a save and fixes the duplicate warper config glitch.
+See [github ticket #12](https://github.com/Pasukaru/DSP-Mods/issues/12) for details.
+
+It only needs to run once. So load up your save game, then save it and close the game. 
+Then disable this setting for a possibly faster loading (on large save games).
+
 ### 1.3.3
 Fix endless request of Warpers. This was caused by placing ILS from copy/pasting and the source ILS had warpers configured in a different slot.
 Now it checks if the placed ILS has any Warper slots configured, and if so, will NOT configure the last slot to be a warper request.

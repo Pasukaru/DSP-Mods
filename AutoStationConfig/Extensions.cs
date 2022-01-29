@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Pasukaru.DSP.AutoStationConfig
@@ -15,8 +16,8 @@ namespace Pasukaru.DSP.AutoStationConfig
 
             var maxEnergy = prefabDesc.workEnergyPerTick * 5;
             var percent = component.isStellar
-                ? Config.ILS.ChargingPowerInPercent.Value
-                : Config.PLS.ChargingPowerInPercent.Value;
+                ? AspConfig.ILS.ChargingPowerInPercent.Value
+                : AspConfig.PLS.ChargingPowerInPercent.Value;
 
             var workPerTick = maxEnergy * percent / 100;
             planetTransport.factory.powerSystem.consumerPool[component.pcId].workEnergyPerTick = workPerTick;
@@ -25,17 +26,17 @@ namespace Pasukaru.DSP.AutoStationConfig
         public static void SetTransportRanges(this StationComponent component)
         {
             component.tripRangeDrones = component.isStellar
-                ? Util.ConvertDegreesToDroneRange(Config.ILS.DroneTransportRange.Value)
-                : Util.ConvertDegreesToDroneRange(Config.PLS.DroneTransportRange.Value);
+                ? Util.ConvertDegreesToDroneRange(AspConfig.ILS.DroneTransportRange.Value)
+                : Util.ConvertDegreesToDroneRange(AspConfig.PLS.DroneTransportRange.Value);
 
             if (!component.isStellar) return;
-            component.tripRangeShips = Util.LY(Config.ILS.VesselTransportRange.Value);
+            component.tripRangeShips = Util.LY(AspConfig.ILS.VesselTransportRange.Value);
         }
 
         public static void SetMinWarpDistance(this StationComponent component)
         {
             if (!component.isStellar) return;
-            component.warpEnableDist = Util.AU(Config.ILS.MinWarpDistance.Value);
+            component.warpEnableDist = Util.AU(AspConfig.ILS.MinWarpDistance.Value);
         }
 
         public static void SetTransportLoads(
@@ -44,12 +45,12 @@ namespace Pasukaru.DSP.AutoStationConfig
         {
             if (component.isStellar)
             {
-                component.deliveryDrones = Config.ILS.MinDroneLoad.Value;
-                component.deliveryShips = Config.ILS.MinVesselLoad.Value;
+                component.deliveryDrones = AspConfig.ILS.MinDroneLoad.Value;
+                component.deliveryShips = AspConfig.ILS.MinVesselLoad.Value;
             }
             else
             {
-                component.deliveryDrones = Config.PLS.MinDroneLoad.Value;
+                component.deliveryDrones = AspConfig.PLS.MinDroneLoad.Value;
             }
         }
 
@@ -57,37 +58,37 @@ namespace Pasukaru.DSP.AutoStationConfig
             this StationComponent component
         )
         {
-            component.warperNecessary = Config.ILS.MustEquipWarp.Value;
-            component.includeOrbitCollector = Config.ILS.UseOrbitalCollectors.Value;
+            component.warperNecessary = AspConfig.ILS.MustEquipWarp.Value;
+            component.includeOrbitCollector = AspConfig.ILS.UseOrbitalCollectors.Value;
         }
 
         public static void AddDronesFromInventory(this StationComponent component, PrefabDesc prefabDesc)
         {
             var percentage = component.isStellar
-                ? Config.ILS.DroneInsertPercentage.Value
-                : Config.PLS.DroneInsertPercentage.Value;
+                ? AspConfig.ILS.DroneInsertPercentage.Value
+                : AspConfig.PLS.DroneInsertPercentage.Value;
 
             var maxToTake = Convert.ToInt32(Math.Floor(prefabDesc.stationMaxDroneCount * percentage));
             var numAvailable = GameMain.mainPlayer.package.TakeItem(ItemIds.Drone, maxToTake, out _);
             component.idleDroneCount = numAvailable;
-            if (Config.General.NotifyWhenDroneOrVesselMissing.Value && numAvailable < maxToTake)
+            if (AspConfig.General.NotifyWhenDroneOrVesselMissing.Value && numAvailable < maxToTake)
             {
                 UIRealtimeTip.PopupAhead("Not enough Logistics Drones in inventory!".Translate(),
-                    Config.General.PlaySoundWhenDroneOrVesselMissing.Value);
+                    AspConfig.General.PlaySoundWhenDroneOrVesselMissing.Value);
             }
         }
 
         public static void AddVesselsFromInventory(this StationComponent component, PrefabDesc prefabDesc)
         {
             if (!component.isStellar) return;
-            var percentage = Config.ILS.VesselInsertPercentage.Value;
+            var percentage = AspConfig.ILS.VesselInsertPercentage.Value;
             var maxToTake = Convert.ToInt32(Math.Floor(prefabDesc.stationMaxShipCount * percentage));
             var numAvailable = GameMain.mainPlayer.package.TakeItem(ItemIds.Vessel, maxToTake, out _);
             component.idleShipCount = numAvailable;
-            if (Config.General.NotifyWhenDroneOrVesselMissing.Value && numAvailable < maxToTake)
+            if (AspConfig.General.NotifyWhenDroneOrVesselMissing.Value && numAvailable < maxToTake)
             {
                 UIRealtimeTip.PopupAhead("Not enough Logistics Vessels in inventory!".Translate(),
-                    Config.General.PlaySoundWhenDroneOrVesselMissing.Value);
+                    AspConfig.General.PlaySoundWhenDroneOrVesselMissing.Value);
             }
         }
 
@@ -97,7 +98,7 @@ namespace Pasukaru.DSP.AutoStationConfig
         )
         {
             if (!component.isStellar) return;
-            if (!Config.ILS.WarperInLastItemSlot.Value) return;
+            if (!AspConfig.ILS.WarperInLastItemSlot.Value) return;
             if (component.HasItemInAnySlot(ItemIds.Warper)) return;
 
             planetTransport.SetStationStorage(
@@ -105,8 +106,8 @@ namespace Pasukaru.DSP.AutoStationConfig
                 component.storage.Length - 1,
                 ItemIds.Warper,
                 Config.ILS.WarperDemand.Value * 100,
-                Config.ILS.WarperLocalMode.Value,
-                Config.ILS.WarperRemoteMode.Value,
+                AspConfig.ILS.WarperLocalMode.Value,
+                AspConfig.ILS.WarperRemoteMode.Value,
                 GameMain.mainPlayer
             );
 
@@ -115,5 +116,34 @@ namespace Pasukaru.DSP.AutoStationConfig
 
         private static bool HasItemInAnySlot(this StationComponent component, int itemId) 
             => component.storage.Any(storage => storage.itemId == itemId);
+
+        public static bool FixDuplicateWarperStores(this StationComponent component, int stationId, PlanetFactory factory)
+        {
+            if (!component.isStellar) return false;
+
+            var duplicateStores = component.storage
+                .Select((storage, idx) => new KeyValuePair<int, StationStore>(idx, storage))
+                .Where(kv => kv.Value.itemId == ItemIds.Warper)
+                .Skip(1)
+                .ToArray();
+
+            if (duplicateStores.Length < 1) return false;
+
+            foreach (var kv in duplicateStores)
+            {
+                factory.transport.SetStationStorage(
+                    stationId,
+                    kv.Key,
+                    0,
+                    0,
+                    ELogisticStorage.None,
+                    ELogisticStorage.None,
+                    factory.gameData.mainPlayer
+                );
+            }
+
+            factory.transport.RefreshTraffic();
+            return true;
+        }
     }
 }
