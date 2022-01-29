@@ -39,6 +39,7 @@ namespace Pasukaru.DSP.AutoStationConfig
 
             public static ConfigEntry<double> MinWarpDistance;
             public static ConfigEntry<bool> WarperInLastItemSlot;
+            public static ConfigEntry<int> WarperDemand;
             public static ConfigEntry<ELogisticStorage> WarperLocalMode;
             public static ConfigEntry<ELogisticStorage> WarperRemoteMode;
 
@@ -175,6 +176,13 @@ namespace Pasukaru.DSP.AutoStationConfig
             
             ILS.WarperInLastItemSlot = config.Bind(ILS_SECTION, "Add Warpers in last Slot", true,
                     "If true, the last item slot will automatically select Space Warpers"
+            );
+
+            ILS.WarperDemand = config.Bind(ILS_SECTION, "Warper Demand", 1, new ConfigDescription(
+                    "Amount of warpers to request, divided by 100. Ex: Set demand to 500 warpers in ILS, 500/100 = 5",
+                    new AcceptableValueRange<int>(1, 100),
+                    new { }
+                )
             );
             
             ILS.WarperLocalMode = config.Bind(ILS_SECTION, "Warper Local Mode", ELogisticStorage.Demand,
