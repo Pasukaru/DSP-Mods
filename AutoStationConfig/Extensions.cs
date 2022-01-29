@@ -105,7 +105,7 @@ namespace Pasukaru.DSP.AutoStationConfig
                 component.id,
                 component.storage.Length - 1,
                 ItemIds.Warper,
-                100,
+                AspConfig.ILS.WarperDemand.Value * 100,
                 AspConfig.ILS.WarperLocalMode.Value,
                 AspConfig.ILS.WarperRemoteMode.Value,
                 GameMain.mainPlayer
