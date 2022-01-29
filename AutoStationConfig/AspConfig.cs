@@ -4,7 +4,7 @@
 namespace Pasukaru.DSP.AutoStationConfig
 {
     
-    public static class Config
+    public static class AspConfig
     {
         private static readonly string GENERAL_SECTION = "General";
         private static readonly string PLS_SECTION = "Planetary Logistics Station";
@@ -14,6 +14,7 @@ namespace Pasukaru.DSP.AutoStationConfig
         {
             public static ConfigEntry<bool> NotifyWhenDroneOrVesselMissing;
             public static ConfigEntry<bool> PlaySoundWhenDroneOrVesselMissing;
+            public static ConfigEntry<bool> PatchWarperConfigOnSaveLoad;
         }
 
         public static class PLS
@@ -59,6 +60,11 @@ namespace Pasukaru.DSP.AutoStationConfig
             General.PlaySoundWhenDroneOrVesselMissing =
                 config.Bind(GENERAL_SECTION, "Play sound when Drone or Vessel missing", true,
                     "Plays a sound along to the drone/vessel notification. Only works when the notification is turned on.");
+            
+            General.PatchWarperConfigOnSaveLoad =
+                config.Bind(GENERAL_SECTION, "Patch ILS Warper config after loading a save", true,
+                    "Patches broken warper configs from previous versions of this mod. See github ticket #12 for details: https://github.com/Pasukaru/DSP-Mods/issues/12\n\n" +
+                    "It only needs to run once. So load up your save game, then save it and close the game. Then disable this setting for a possibly faster loading (on large save games).");
             
             ////////////////
             // PLS Config //
