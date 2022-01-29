@@ -30,6 +30,13 @@ The available settings will then appear in the r2modman Config Editor (look for 
 
 ## Changelog
 
+### 1.4.0
+Added configuration option for the amount of warpers requested. Previously was hardcoded to 100.
+The default value for this config option is still 100, so change it manually if you want something else.
+Only applies to newly placed stations. Existing stations will not have their warper requests changed.
+
+Thanks to [DanielHeEGG](https://github.com/DanielHeEGG) for the PR!
+
 ### 1.3.4
 The mod now automatically checks all ILS after loading a save and fixes the duplicate warper config glitch.
 See [github ticket #12](https://github.com/Pasukaru/DSP-Mods/issues/12) for details.
