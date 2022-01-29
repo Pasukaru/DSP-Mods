@@ -30,6 +30,10 @@ The available settings will then appear in the r2modman Config Editor (look for 
 
 ## Changelog
 
+### 1.3.3
+Fix endless request of Warpers. This was caused by placing ILS from copy/pasting and the source ILS had warpers configured in a different slot.
+Now it checks if the placed ILS has any Warper slots configured, and if so, will NOT configure the last slot to be a warper request.
+
 ### 1.3.2
 Compatibility with latest DSP version (2022-01-24).
 

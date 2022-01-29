@@ -7,7 +7,7 @@ using HarmonyLib;
 
 namespace Pasukaru.DSP.AutoStationConfig
 {
-    [BepInPlugin("pasukaru.dsp.AutoStationConfig", "AutoStationConfig", "1.3.2")]
+    [BepInPlugin("pasukaru.dsp.AutoStationConfig", "AutoStationConfig", "1.3.3")]
     [BepInProcess("DSPGAME.exe")]
     public class AutoStationConfigPlugin : BaseUnityPlugin
     {
@@ -21,6 +21,7 @@ namespace Pasukaru.DSP.AutoStationConfig
             Pasukaru.DSP.AutoStationConfig.Config.Init(Config);
             var harmony = new Harmony("pasukaru.dsp.AutoStationConfig");
             harmony.PatchAll(typeof(PlanetTransportPatch));
+            harmony.PatchAll(typeof(BuildingParametersPatch));
             Logger.LogInfo("Loaded!");
         }
     }

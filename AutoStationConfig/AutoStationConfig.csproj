@@ -57,7 +57,10 @@
     </ItemGroup>
     <ItemGroup>
         <Compile Include="AutoStationConfigPlugin.cs" />
+        <Compile Include="BuildingParametersPatch.cs" />
         <Compile Include="Config.cs" />
+        <Compile Include="Extensions.cs" />
+        <Compile Include="ItemIds.cs" />
         <Compile Include="PlanetTransportPatch.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
         <Compile Include="Util.cs" />
