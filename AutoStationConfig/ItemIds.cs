@@ -5,5 +5,6 @@
         public const int Warper = 1210;
         public const int Drone = 5001;
         public const int Vessel = 5002;
+        public const int Bot = 5003;
     }
 }

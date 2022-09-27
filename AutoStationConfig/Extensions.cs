@@ -12,8 +12,6 @@ namespace Pasukaru.DSP.AutoStationConfig
             PrefabDesc prefabDesc
         )
         {
-            if (component.isCollector) return;
-
             var maxEnergy = prefabDesc.workEnergyPerTick * 5;
             var percent = component.isStellar
                 ? AspConfig.ILS.ChargingPowerInPercent.Value
@@ -62,8 +60,22 @@ namespace Pasukaru.DSP.AutoStationConfig
             component.includeOrbitCollector = AspConfig.ILS.UseOrbitalCollectors.Value;
         }
 
+        public static void SetStackCount(this StationComponent component)
+        {
+            if (component.isCollector) return;
+            if (component.isVeinCollector)
+                component.pilerCount = AspConfig.AMM.StackCount.Value;
+            else
+                component.pilerCount = component.isStellar ? AspConfig.ILS.StackCount.Value : AspConfig.PLS.StackCount.Value;
+        }
+
         public static void AddDronesFromInventory(this StationComponent component, PrefabDesc prefabDesc)
         {
+            if (AspConfig.General.EnableAutoReplenish.Value)
+            {
+                component.droneAutoReplenish = true;
+                return;
+            }
             var percentage = component.isStellar
                 ? AspConfig.ILS.DroneInsertPercentage.Value
                 : AspConfig.PLS.DroneInsertPercentage.Value;
@@ -81,6 +93,11 @@ namespace Pasukaru.DSP.AutoStationConfig
         public static void AddVesselsFromInventory(this StationComponent component, PrefabDesc prefabDesc)
         {
             if (!component.isStellar) return;
+            if (AspConfig.General.EnableAutoReplenish.Value)
+            {
+                component.shipAutoReplenish = true;
+                return;
+            }
             var percentage = AspConfig.ILS.VesselInsertPercentage.Value;
             var maxToTake = Convert.ToInt32(Math.Floor(prefabDesc.stationMaxShipCount * percentage));
             var numAvailable = GameMain.mainPlayer.package.TakeItem(ItemIds.Vessel, maxToTake, out _);
@@ -142,8 +159,57 @@ namespace Pasukaru.DSP.AutoStationConfig
                 );
             }
 
-            factory.transport.RefreshTraffic();
+            factory.transport.RefreshStationTraffic();
             return true;
+        }
+
+        public static void SetGatheringSpeed(this StationComponent component, PlanetFactory factory)
+        {
+            factory.factorySystem.minerPool[component.minerId].speed =
+                AspConfig.AMM.GatheringSpeedInPercent.Value * 100;
+        }
+ 
+        public static void SetChargingPower(
+            this DispenserComponent component,
+            PlanetFactory factory,
+            PrefabDesc prefabDesc
+        )
+        {
+            var maxEnergy = prefabDesc.workEnergyPerTick * 5;
+            var percent = AspConfig.LD.ChargingPowerInPercent.Value;
+
+            var workPerTick = maxEnergy * percent / 100;
+            factory.powerSystem.consumerPool[component.pcId].workEnergyPerTick =
+                workPerTick / 5000 * 5000; /* align power to multiples of 5kW per tick */
+        }
+
+        public static void AddBotsFromInventory(this DispenserComponent component, PrefabDesc prefabDesc)
+        {
+            if (AspConfig.General.EnableAutoReplenish.Value)
+            {
+                component.courierAutoReplenish = true;
+                return;
+            }
+            var maxToTake = Convert.ToInt32(Math.Floor(prefabDesc.dispenserMaxCourierCount * AspConfig.LD.BotInsertPercentage.Value));
+            var numAvailable = GameMain.mainPlayer.package.TakeItem(ItemIds.Bot, maxToTake, out _);
+            component.idleCourierCount = numAvailable;
+            if (AspConfig.General.NotifyWhenDroneOrVesselMissing.Value && numAvailable < maxToTake)
+            {
+                UIRealtimeTip.PopupAhead("Not enough Logistics Drones in inventory!".Translate(),
+                    AspConfig.General.PlaySoundWhenDroneOrVesselMissing.Value);
+            }
+        }
+
+        public static void ApplyGuessFilter(this DispenserComponent component, PlanetFactory factory)
+        {
+            if (!AspConfig.LD.AlwaysGuessFilter.Value) return;
+            /* store old filter for later use */
+            var oldFilter = component.filter;
+            /* try re-guess */
+            component.filter = 0;
+            component.GuessFilter(factory);
+            /* revert to old filter if nothing is guessed out */
+            if (component.filter == 0) component.filter = oldFilter;
         }
     }
 }
