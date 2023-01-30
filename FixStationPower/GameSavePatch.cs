@@ -35,14 +35,27 @@ namespace Pasukaru.DSP.FixStationPower
                         if (ldb == null) continue;
                         var prefab = ldb.prefabDesc;
                         if (consumerPool.Length < component.pcId) continue;
-                        
-                        var maxEnergy = prefab.workEnergyPerTick * 5;
-                        var percent = component.isStellar
-                            ? Config.ILS.ChargingPowerInPercent.Value
-                            : Config.PLS.ChargingPowerInPercent.Value;
-            
-                        var workPerTick = maxEnergy * percent / 100;
-                        consumerPool[component.pcId].workEnergyPerTick = workPerTick;
+
+                        if (component.isVeinCollector)
+                        {
+                            if (consumerPool[component.pcId].workEnergyPerTick == prefab.workEnergyPerTick)
+                                continue;
+                            consumerPool[component.pcId].workEnergyPerTick = prefab.workEnergyPerTick;
+                        }
+                        else
+                        {
+                            var maxEnergy = prefab.workEnergyPerTick * 5;
+                            if (consumerPool[component.pcId].workEnergyPerTick >= maxEnergy / 10 &&
+                                consumerPool[component.pcId].workEnergyPerTick <= maxEnergy)
+                                continue;
+
+                            var percent = component.isStellar
+                                ? Config.ILS.ChargingPowerInPercent.Value
+                                : Config.PLS.ChargingPowerInPercent.Value;
+
+                            var workPerTick = maxEnergy * percent / 100;
+                            consumerPool[component.pcId].workEnergyPerTick = workPerTick;
+                        }
                         count++;
                     }
                 }

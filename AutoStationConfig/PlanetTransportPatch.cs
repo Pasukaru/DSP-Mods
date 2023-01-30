@@ -7,28 +7,23 @@ namespace Pasukaru.DSP.AutoStationConfig
     {
         [HarmonyPostfix]
         [HarmonyPatch("NewStationComponent")]
-        public static void NewStationComponent(
-            PlanetTransport __instance,
-            StationComponent __result
-        )
+        public static void NewStationComponent(int _entityId, int _pcId, PrefabDesc _desc, PlanetTransport __instance, StationComponent __result)
         {
             var component = __result;
-            if (component.isCollector) return;
+            if (component.isCollector || component.isVeinCollector) return;
 
             var planetTransport = __instance;
-            var itemProto = LDB.items.Select(planetTransport.factory.entityPool[component.entityId].protoId);
-            var prefabDesc = itemProto.prefabDesc;
 
-            component.SetChargingPower(planetTransport, prefabDesc);
+            component.SetChargingPower(planetTransport, _desc);
             component.SetTransportRanges();
             component.SetTransportLoads();
-            component.AddDronesFromInventory(prefabDesc);
+            component.AddDronesFromInventory(_desc);
 
             // Extra configuration if ILS.
             if (!component.isStellar) return;
             component.SetToggles();
             component.SetMinWarpDistance();
-            component.AddVesselsFromInventory(prefabDesc);
+            component.AddVesselsFromInventory(_desc);
             component.AddWarperRequestToLastSlot(planetTransport);
         }
     }
